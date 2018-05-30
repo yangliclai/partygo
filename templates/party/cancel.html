@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Cancel a party{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h3>
+            {{ party.name}}
+        </h3>
+
+        {% if error %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% from "_formhelpers.html" import render_field %}
+        <form method="POST" action="{{ url_for('party_page.cancel', id=party.id) }}">
+
+            {{ form.csrf_token }}
+            {{ render_field(form.confirm, class="form-control")}}
+            
+            <button type="submit" class="btn btn-danger">
+                Cancel Party
+            </button>
+            <a href="{{ url_for('party_page.edit', id=party.id) }}">back to edit party</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

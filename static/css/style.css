@@ -1,0 +1,22 @@
+.party-photo-item {
+    width: 100%;
+    height: 300px;
+}
+
+.party-item {
+    margin-bottom: 30px;
+}
+
+.jumbotron {
+    margin-top: -100;
+    margin-bottom: 0;
+    background-color: #fff;
+}
+
+.jumbotron-heading {
+    font-weight: 400;
+}
+
+.jumbotron .container {
+    max-width: 600px;
+}

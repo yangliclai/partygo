@@ -1,0 +1,5 @@
+Flask==0.12.2
+flask_mongoengine==0.9.3
+google-cloud==0.29.0
+
+#py-bcrypt==0.4 always fail ,so now bcrpyt==3.14 takes place of former.

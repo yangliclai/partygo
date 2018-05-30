@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Explore{% endblock %}
+{% block content %}
+
+<div class="jumbotron text-center">
+    <div class="container">
+        <h1 class="jumbotron-heading">
+            Find a Party
+        </h1>
+        <p class="lead text-muted">
+            If you want to go fast, go alone. If you want to go far, go together.
+        </p>
+
+        <form method='GET' action="{{ url_for('party_page.explore') }}">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search for place...e.g.Potsdam NY" id="autocomplete">
+                <input type="hidden" name="place" id="place">
+                <input type="hidden" name="lng" id="lng">
+                <input type="hidden" name="lat" id="lat">
+                <span class="input-group-btn">
+                    <button class="btn btn-secondary" type="submit">
+                        Go!
+                    </button>
+                </span>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if parties and parties.pages > 0 %}
+<p class="text-muted text-center">
+    Party near {{ place }}
+</p>
+
+
+<div class="row">
+    {% for party in parties.items %}
+    <div class="col-md-6 party-item">
+        <div class="card">
+            <a href="{{ url_for('party_page.public', id=party.id) }}" target="_blank">
+            {% if party.party_photo %}
+            <img class="card-img-top party-photo-item" src="{{ party.party_photo}}">
+            {% else %}
+            <img class="card-img-top party-photo-item" src="{{ url_for('static', filename='img/party.png' )}}">
+            {% endif %}
+            </a>
+            <div class="card-block">
+                <h4 class="card-title">
+                    {{ party.name }}
+                </h4>
+                <p class="card-text">
+                    {{ party.description[:150] }}
+                </p>
+                <p class="card-text">
+                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                    <a href="http://maps.google.com?q={{ party.place }}" target="_blank">
+                    {{ party.place }}
+                    </a>
+                    <br>
+                    <i class="fa fa-clock-o" aria-hidden="true"></i>
+                    {{ party.start_datetime.strftime("%Y-%m-%d %I:%M%p") }}
+                    <br>
+                    <i class="fa fa-users" aria-hidden="true"></i>
+                    {{ party.attendees|length }} attending
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="row justify-content-center">
+    <ul class="pagination">
+        {% if parties.has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('party_page.explore', party_page_number=parties.prev_num, place=place, lng=lng, lat=lat) }}">
+                <span>&laquo;</span>
+            </a>
+        </li>
+        {% endif %}
+        <li class="page-item">
+            <p class="page-link">
+                Page {{ parties.page }} of {{ parties.pages }}
+            </p>
+        </li>
+        {% if parties.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('party_page.explore', party_page_number=parties.next_num, place=place, lng=lng, lat=lat) }}">
+                <span>&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+
+{% elif place %}
+<p class="text-muted text-center">
+    We couldn't find any parties here :(
+</p>
+{% else %}
+{% endif %}
+
+{% endblock %}
+{% block javascript %}
+{% include "googleapi.html" %}
+{% endblock %}

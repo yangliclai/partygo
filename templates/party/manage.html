@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Manage Party{% endblock %}
+{% block content %}
+
+<h1>
+    My Parties
+</h1>
+
+<div class="row">
+    {% for party in parties.items %}
+    <div class="col-md-6 party-item">
+        <div class="card">
+            {% if party.party_photo %}
+            <img class="card-img-top party-photo-item" src="{{ party.party_photo}}">
+            {% else %}
+            <img class="card-img-top party-photo-item" src="{{ url_for('static', filename='img/party.png' )}}">
+            {% endif %}
+            <div class="card-block">
+                <h4 class="card-title">
+                    {{ party.name }}
+                </h4>
+                <p class="card-text">
+                    {{ party.description[:150] }}
+                </p>
+                <p class="card-text">
+                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                    <a href="http://maps.google.com?q={{ party.place }}" target="_blank">
+                    {{ party.place }}
+                    </a>
+                    <br>
+                    <i class="fa fa-clock-o" aria-hidden="true"></i>
+                    {{ party.start_datetime.strftime("%Y-%m-%d %I:%M%p") }}
+                    <br>
+                    <i class="fa fa-users" aria-hidden="true"></i>
+                    {{ party.attendees|length }} attending
+                </p>
+                {% if party.cancel %}
+                <button class="btn btn-danger">
+                    Canceled
+                </button>
+                {% else %}
+                <a href="{{ url_for('party_page.edit', id=party.id) }}" class="btn btn-success">
+                    Edit
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="row justify-content-center">
+    <ul class="pagination">
+        {% if parties.has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('party_page.manage', party_page_number=parties.prev_num) }}">
+                <span>&laquo;</span>
+            </a>
+        </li>
+        {% endif %}
+        <li class="page-item">
+            <p class="page-link">
+                Page {{ parties.page }} of {{ parties.pages }}
+            </p>
+        </li>
+        {% if parties.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('party_page.manage', party_page_number=parties.next_num) }}">
+                <span>&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+{% endblock %}

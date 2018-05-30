@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Test Photo{% endblock %}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+
+        <img width="100%" src="{{ url_for('static', filename='img/party.png') }}">
+
+        <div class="text-center">
+            <h3>
+                Test Photo
+            </h3>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

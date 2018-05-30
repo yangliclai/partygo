@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}{{ user.name }}'s Profile{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="text-center">
+            {% if user.profile_image %}
+            <img width="150px" height="150px" src="{{ user.profile_image }}" class="img-thumbnail rounded-circle">
+            {% else %}
+            <img width="150px" height="150px" src="{{ url_for('static',filename='img/user.png')}}" class="img-thumbnail rounded-circle">
+            {% endif %}
+            <h3>
+                {{ user.name }}
+            </h3>
+
+            <p>
+                {% if user.bio %}
+                {{ user.bio }}
+                {%  else %}
+                Hello everyone, I am newbie here!
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</div>
+
+{% if parties and parties.pages > 0 %}
+<p class="text-muted text-center">
+    Party I'm going :)
+</p>
+
+<div class="row">
+    {% for party in parties.items %}
+    <div class="col-md-6 party-item">
+        <div class="card">
+            <a href="{{ url_for('party_page.public', id=party.id) }}" target="_blank">
+            {% if party.party_photo %}
+            <img class="card-img-top party-photo-item" src="{{ party.party_photo}}">
+            {% else %}
+            <img class="card-img-top party-photo-item" src="{{ url_for('static', filename='img/party.png' )}}">
+            {% endif %}
+            </a>
+            <div class="card-block">
+                <h4 class="card-title">
+                    {{ party.name }}
+                </h4>
+                <p class="card-text">
+                    {{ party.description[:150] }}
+                </p>
+                <p class="card-text">
+                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                    <a href="http://maps.google.com?q={{ party.place }}" target="_blank">
+                    {{ party.place }}
+                    </a>
+                    <br>
+                    <i class="fa fa-clock-o" aria-hidden="true"></i>
+                    {{ party.start_datetime.strftime("%Y-%m-%d %I:%M%p") }}
+                    <br>
+                    <i class="fa fa-users" aria-hidden="true"></i>
+                    {{ party.attendees|length }} attending
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="row justify-content-center">
+    <ul class="pagination">
+        {% if parties.has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('user_page.profile', party_page_number=parties.prev_num, id=user.id) }}">
+                <span>&laquo;</span>
+            </a>
+        </li>
+        {% endif %}
+        <li class="page-item">
+            <p class="page-link">
+                Page {{ parties.page }} of {{ parties.pages }}
+            </p>
+        </li>
+        {% if parties.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('user_page.profile', party_page_number=parties.next_num, id=user.id) }}">
+                <span>&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+
+{% endif %}
+{% endblock %}

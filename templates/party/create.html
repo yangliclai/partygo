@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Create Party{% endblock %}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="text-center">
+            <h3>
+                Create Party
+            </h3>
+        </div>
+        {% if error %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% from "_formhelpers.html" import render_field %}
+        <form method="POST" action="{{ url_for('party_page.create') }}" >
+
+            {{ form.csrf_token }}
+            {{ render_field(form.name, class="form-control") }}
+            {{ render_field(form.gplace, class="form-control", id="autocomplete", placeholder="Enter your address") }}
+            {{ render_field(form.place, class="form-control", id="place",readonly=true) }}
+            {{ render_field(form.lng, class="form-control", id="lng", readonly=true) }}
+            {{ render_field(form.lat, class="form-control", id="lat", readonly=true) }}
+            {{ render_field(form.start_datetime, class="form-control", placeholder="e.g. YYYY-MM-DD HH:MM") }}
+            {{ render_field(form.end_datetime, class="form-control", placeholder="e.g. YYYY-MM-DD HH:MM") }}
+            {{ render_field(form.description, class="form-control", rows="8", minlength="50") }}
+
+            <button type="submit" class="btn btn-success">
+                Create Party
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+{% include "googleapi.html" %}
+{% endblock %}

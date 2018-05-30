@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Edit Party{% endblock %}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+
+        {% if party.party_photo %}
+        <img width="100%" src="{{ party.party_photo }}">
+        {% else %}
+        <img width="100%" src="{{ url_for('static', filename='img/party.png') }}">
+        {% endif %}
+
+        <div class="text-center">
+            <h3>
+                Edit Party
+            </h3>
+            <h6>
+                <a href="{{ url_for('party_page.public', id=party.id) }}">Preview</a>
+            </h6>
+        </div>
+        {% if error %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if message %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+        {% endif %}
+
+        {% from "_formhelpers.html" import render_field %}
+        <form method="POST" action="{{ url_for('party_page.edit', id=party.id) }}" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            {{ render_field(form.name, class="form-control") }}
+            {{ render_field(form.gplace, class="form-control",id="autocomplete", placeholder="Enter your address") }}
+            {{ render_field(form.place, class="form-control", id="place",readonly=true) }}
+            {{ render_field(form.lng, class="form-control", id="lng", readonly=true) }}
+            {{ render_field(form.lat, class="form-control", id="lat", readonly=true) }}
+            {{ render_field(form.start_datetime, class="form-control", placeholder="e.g. YYYY-MM-DD HH:MM") }}
+            {{ render_field(form.end_datetime, class="form-control", placeholder="e.g. YYYY-MM-DD HH:MM") }}
+            
+            {{ render_field(form.photo, class="form-control") }}
+            {{ render_field(form.description, class="form-control", rows="8", minlength="50") }}
+            
+            {% if party.cancel %}
+            This party is canceled
+            {% else %}
+            <button type="submit" class="btn btn-success">
+                Save
+            </button>
+            <a href="{{ url_for('party_page.cancel', id=party.id) }}">Cancel party</a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+{% include "googleapi.html" %}
+{% endblock %}
